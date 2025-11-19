@@ -85,7 +85,7 @@ def main():
     papers = [_cleanup(paper) for paper in papers]
     logging.info(f"Fetched {len(papers)} papers.")
 
-    df = pd.DataFrame(papers)
+    df = pd.DataFrame(papers).drop_duplicates(subset=["s2_id"]).reset_index(drop=True)
     dataset = Dataset.from_pandas(df)
     dataset.push_to_hub(args.output_dataset, private=True)
     logging.info(f"Saved dataset to HuggingFace Hub at {args.output_dataset}")
