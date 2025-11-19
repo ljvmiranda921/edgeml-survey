@@ -161,7 +161,6 @@ def _cleanup(data: dict[str, Any]) -> dict[str, Any]:
         "abstract": data.get("abstract").replace("\n", "") if data.get("abstract") else "",
         "publication_type": [pub for pub in data.get("publicationTypes")],
         "venue": data.get("venue"),
-        "journal": data.get("journal").get("text") if data.get("journal") else "",
         "date": data.get("publicationDate"),
         "year": data.get("year"),
         "is_open_access": data.get("isOpenAccess"),
