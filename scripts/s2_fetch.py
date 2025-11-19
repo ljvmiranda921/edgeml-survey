@@ -5,8 +5,8 @@ import logging
 import os
 import sys
 import time
-from typing import Any
 from pathlib import Path
+from typing import Any
 
 import pandas as pd
 import requests
