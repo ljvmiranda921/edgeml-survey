@@ -24,7 +24,7 @@ logging.basicConfig(
 load_dotenv()
 
 # Docs: https://api.semanticscholar.org/api-docs/#tag/Paper-Data/operation/get_graph_paper_bulk_search
-DEFAULT_BULK_QUERY = """("edge" | "mobile" | "on-device") + ("language model*" | NLP | "natural language") + ("distillation" | "compression" | "quantization" | "pruning" | "efficient")"""
+DEFAULT_BULK_QUERY = """("edge" | "mobile" | "on-device" | "tinyml" | "tiny ml" | "tiny machine learning" | "tiny deep learning") + ("language model*" | NLP | "natural language") + ("distillation" | "compression" | "quantization" | "pruning" | "efficient")"""
 BULK_API = "https://api.semanticscholar.org/graph/v1/paper/search/bulk/"
 # Docs: https://api.semanticscholar.org/api-docs/#tag/Paper-Data/operation/get_graph_paper_relevance_search
 DEFAULT_SEARCH_QUERY = "edge machine learning OR tinyML OR tiny machine learning OR microcontroller machine learning OR microcontroller neural networks OR on-device machine learning"
