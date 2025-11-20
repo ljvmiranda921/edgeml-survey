@@ -24,7 +24,7 @@ logging.basicConfig(
 load_dotenv()
 
 # Docs: https://api.semanticscholar.org/api-docs/#tag/Paper-Data/operation/get_graph_paper_bulk_search
-DEFAULT_BULK_QUERY = """("edge" | "mobile" | "on-device") + ("language model*" | NLP | "natural language") + ("distillation" | "compression" | "quantization" | "pruning" | "efficient")"""
+DEFAULT_BULK_QUERY = """("edge" | "mobile" | "on-device" | "tinyml" | "tiny ml" | "tiny machine learning" | "tiny deep learning") + ("language model*" | NLP | "natural language") + ("distillation" | "compression" | "quantization" | "pruning" | "efficient")"""
 BULK_API = "https://api.semanticscholar.org/graph/v1/paper/search/bulk/"
 # Docs: https://api.semanticscholar.org/api-docs/#tag/Paper-Data/operation/get_graph_paper_relevance_search
 DEFAULT_SEARCH_QUERY = "edge machine learning OR tinyML OR tiny machine learning OR microcontroller machine learning OR microcontroller neural networks OR on-device machine learning"
@@ -85,7 +85,7 @@ def main():
     papers = [_cleanup(paper) for paper in papers]
     logging.info(f"Fetched {len(papers)} papers.")
 
-    df = pd.DataFrame(papers)
+    df = pd.DataFrame(papers).drop_duplicates(subset=["s2_id"]).reset_index(drop=True)
     dataset = Dataset.from_pandas(df)
     dataset.push_to_hub(args.output_dataset, private=True)
     logging.info(f"Saved dataset to HuggingFace Hub at {args.output_dataset}")
