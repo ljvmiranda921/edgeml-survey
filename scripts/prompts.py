@@ -72,9 +72,8 @@ class ResearchPaperAnnotation(BaseModel):
             "Wearables",
             "Mobile Devices",
             "Laptop/PC",
-            "Edge Servers",
             "Cloud",
-            "Other",
+            "Not Specified",
         ]
     ] = Field(..., description="Deployment platforms targeted by the paper.")
     models_released: List[str] = Field(
