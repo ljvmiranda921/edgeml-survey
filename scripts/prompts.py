@@ -11,8 +11,9 @@ USER_PROMPT = """Title: {title}\n\nAbstract: {abstract}\n\nPlease classify the p
 5. Names of any models released by the authors.
 6. Parameter sizes of the models released (in B of parameters).
 7. Modality of the models (e.g., text, speech, multimodal).
-8. Is this paper relevant in the context of efficient NLP on edge devices (score from 1 to 5, with 5 as highly relevant)?
-9. State your reason as to why you assigned the relevance score.
+8. Languages supported by the models (if applicable). Use the ISO 639-1 codes where possible (e.g., en, fr, de, es).
+9. Is this paper relevant in the context of efficient NLP on edge devices (score from 1 to 5, with 5 as highly relevant)?
+10. State your reason as to why you assigned the relevance score.
 """
 
 
@@ -94,6 +95,10 @@ class ResearchPaperAnnotation(BaseModel):
     ] = Field(
         ...,
         description="Modality of the models (e.g., text, speech, vision multimodal).",
+    )
+    languages_supported: List[str] = Field(
+        ...,
+        description="Languages supported by the models (if applicable). Use the ISO 639-1 codes where possible (e.g., en, fr, de, es).",
     )
     relevance_score: int = Field(
         ...,
