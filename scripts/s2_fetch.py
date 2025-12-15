@@ -57,6 +57,7 @@ def get_args():
     parser.add_argument("-B", "--use_bulk_api", action="store_true", help="Whether to use the bulk API for fetching papers.")
     parser.add_argument("--year", type=int, default=2015, help="Fetch papers published from this year onwards.")
     parser.add_argument("-X", "--use_unauthenticated", action="store_true", help="Use unauthenticated requests (no API key). May be subject to stricter rate limits.")
+    parser.add_argument("--download", type=str, default=None, help="Directory path to download open access PDFs. If not provided, PDFs won't be downloaded.")
     # fmt: on
     return parser.parse_args()
 
@@ -84,6 +85,13 @@ def main():
     )
     papers = [_cleanup(paper) for paper in papers]
     logging.info(f"Fetched {len(papers)} papers.")
+
+    if args.download:
+        download_dir = Path(args.download)
+        download_dir.mkdir(parents=True, exist_ok=True)
+        for paper in papers:
+            _download(paper, download_dir)
+        logging.info(f"Downloaded PDFs to {download_dir}")
 
     df = pd.DataFrame(papers).drop_duplicates(subset=["s2_id"]).reset_index(drop=True)
     dataset = Dataset.from_pandas(df)
@@ -171,6 +179,35 @@ def _cleanup(data: dict[str, Any]) -> dict[str, Any]:
         # fmt: on
     }
     return paper_detail
+
+
+def _download(paper: dict[str, Any], download_dir: Path) -> None:
+    """Download the paper PDF if available"""
+    pdf_url = paper.get("open_access_pdf")
+    if not pdf_url:
+        logging.debug(
+            f"No open access PDF for paper {paper.get('s2_id')}: {paper.get('title')}"
+        )
+        return
+
+    s2_id = paper.get("s2_id")
+    pdf_path = download_dir / f"{s2_id}.pdf"
+
+    if pdf_path.exists():
+        logging.debug(f"PDF already exists for {s2_id}, skipping download")
+        return
+
+    try:
+        logging.info(f"Downloading PDF for {s2_id}: {paper.get('title')}")
+        response = requests.get(pdf_url, timeout=30)
+        response.raise_for_status()
+
+        with open(pdf_path, "wb") as f:
+            f.write(response.content)
+
+        logging.info(f"Successfully downloaded PDF to {pdf_path}")
+    except Exception as e:
+        logging.error(f"Failed to download PDF for {s2_id}: {e}")
 
 
 if __name__ == "__main__":
