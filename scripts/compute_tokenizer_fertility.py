@@ -15,7 +15,12 @@ logging.basicConfig(
 
 
 def get_args():
-    pass
+    # fmt: off
+    parser = argparse.ArgumentParser(description="Compute tokenizer fertility.")
+    parser.add_argument("--input_dataset", type=str, required=True, help="Path to the dataset to compute tokenizer fertility.")
+    parser.add_argument("--split", type=str, default="train", help="Dataset split name.")
+    parser.add_argument("--tokenizer", type=str, required=True, help="Path to tokenizer.")
+    # fmt: on
 
 
 def main():
