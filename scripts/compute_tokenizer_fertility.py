@@ -34,11 +34,19 @@ def main():
     output_path = args.output_dir / f"{tokenizer_name}.csv"
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Initialize CSV with headers
-    df = pd.DataFrame(columns=["subset", "tpw", "tpb", "tt", "tw", "tb"])
-    df.to_csv(output_path, index=False)
+    # Load existing subsets or initialize CSV with headers
+    if output_path.exists():
+        existing_df = pd.read_csv(output_path)
+        existing_subsets = set(existing_df["subset"].tolist())
+    else:
+        existing_subsets = set()
+        df = pd.DataFrame(columns=["subset", "tpw", "tpb", "tt", "tw", "tb"])
+        df.to_csv(output_path, index=False)
 
     for subset in subsets:
+        if subset in existing_subsets:
+            tqdm.write(f"Skipping {subset} (already exists)")
+            continue
         dataset = load_dataset(args.input_dataset, subset, split=args.split)
 
         total_words = 0
