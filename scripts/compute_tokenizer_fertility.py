@@ -47,7 +47,12 @@ def main():
         if subset in existing_subsets:
             tqdm.write(f"Skipping {subset} (already exists)")
             continue
-        dataset = load_dataset(args.input_dataset, subset, split=args.split)
+
+        try:
+            dataset = load_dataset(args.input_dataset, subset, split=args.split)
+        except ValueError:
+            tqdm.write(f"Skipping {subset} (no {args.split} split)")
+            continue
 
         total_words = 0
         total_bytes = 0
