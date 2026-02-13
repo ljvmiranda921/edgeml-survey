@@ -12,7 +12,7 @@ def get_args():
     # fmt: off
     parser = argparse.ArgumentParser(description="Compute tokenizer fertility from the Flores-200 dataset.")
     parser.add_argument("--input_dataset", type=str, default="openlanguagedata/flores_plus", help="Path to the dataset to compute tokenizer fertility.")
-    parser.add_argument("--output_path", type=Path, help="Path to save the output CSV file.")
+    parser.add_argument("--output_dir", type=Path, default="notebooks/data/tokenizer_fertility", help="Path to save the output CSV file.")
     parser.add_argument("--split", type=str, default="dev", help="Dataset split name.")
     parser.add_argument("--tokenizer", type=str, required=True, help="HuggingFace ID to tokenizer.")
     parser.add_argument("--text_field", type=str, default="text", help="Input field in the dataset that contains the text to tokenize.")
@@ -30,7 +30,8 @@ def main():
     def tokenize_fn(eg):
         return tokenizer(eg[args.text_field])
 
-    output_path = Path("notebooks/data/tokenizer_fertility.csv")
+    tokenizer_name = args.tokenizer.replace("/", "___")
+    output_path = args.output_dir / f"{tokenizer_name}.csv"
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Initialize CSV with headers
