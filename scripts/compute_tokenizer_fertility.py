@@ -30,7 +30,13 @@ def main():
     def tokenize_fn(eg):
         return tokenizer(eg[args.text_field])
 
-    outputs = {}
+    output_path = Path("notebooks/data/tokenizer_fertility.csv")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Initialize CSV with headers
+    df = pd.DataFrame(columns=["subset", "tpw", "tpb", "tt", "tw", "tb"])
+    df.to_csv(output_path, index=False)
+
     for subset in subsets:
         dataset = load_dataset(args.input_dataset, subset, split=args.split)
 
@@ -49,7 +55,8 @@ def main():
         tokens_per_word = total_tokens / total_words
         tokens_per_byte = total_tokens / total_bytes
 
-        results = {
+        row = {
+            "subset": subset,
             "tpw": tokens_per_word,
             "tpb": tokens_per_byte,
             "tt": total_tokens,
@@ -57,11 +64,8 @@ def main():
             "tb": total_bytes,
         }
 
-        outputs[subset] = results
-
-        tqdm.write(f"{subset}: {results}")
-
-    breakpoint()
+        pd.DataFrame([row]).to_csv(output_path, mode="a", header=False, index=False)
+        tqdm.write(f"{subset}: {row}")
 
 
 def n_words(sentence: str) -> int:
