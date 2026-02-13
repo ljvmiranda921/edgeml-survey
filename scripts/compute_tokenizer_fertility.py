@@ -59,7 +59,9 @@ def main():
 
         outputs[subset] = results
 
-        tqdm.write(results)
+        tqdm.write(f"{subset}: {results}")
+
+    breakpoint()
 
 
 def n_words(sentence: str) -> int:
