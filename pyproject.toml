@@ -10,6 +10,7 @@ dependencies = [
     "matplotlib>=3.10.7",
     "openai>=2.8.1",
     "pandas>=2.3.3",
+    "pycountry>=24.6.1",
     "pydantic>=2.12.4",
     "python-dotenv>=1.2.1",
     "regex>=2026.1.15",
